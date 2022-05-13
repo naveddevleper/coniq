@@ -17,7 +17,10 @@ use App\Helpers\Shopify;
 */
 Route::middleware(['auth.shopify'])->group(function(){
  Route::get('/',[CustomerDetails::class, 'customer']);
- Route::get('customerid',[CustomerDetails::class, 'customerid']);
+ Route::get('/customerid',[CustomerDetails::class, 'customerid']);
+ Route::get('/addDiscount',[CustomerDetails::class, 'addDiscount']);
+ Route::get('/customers',[CustomerDetails::class, 'customer']);
+ //Route::get('customerid',[CustomerDetails::class, 'customer']);
 });
 // Route::get('/', function () {
 //     return view('welcome');

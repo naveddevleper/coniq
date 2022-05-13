@@ -122,6 +122,11 @@ return [
 
     'api_secret' => env('SHOPIFY_API_SECRET', ''),
 
+
+
+    'api_access_token' => env('ACCESS_TOKEN', ''),
+
+
     /*
     |--------------------------------------------------------------------------
     | Shopify API Scopes
@@ -131,7 +136,8 @@ return [
     |
     */
 
-    'api_scopes' => env('SHOPIFY_API_SCOPES', 'read_products,write_products,read_themes,write_themes,read_orders,read_customers'),
+    'api_scopes' => env('SHOPIFY_API_SCOPES', 'read_draft_orders,read_all_orders,read_products,write_products,read_themes,write_themes,read_orders,read_customers,
+    write_draft_orders,read_orders,write_orders'),
 
     /*
     |--------------------------------------------------------------------------
@@ -278,6 +284,10 @@ return [
             ],
             ...
         */
+        [
+            'topic' => env('SHOPIFY_WEBHOOK_1_TOPIC', 'carts/update'),
+            'address' => env('SHOPIFY_WEBHOOK_1_ADDRESS', 'https://some-app.com/webhook/carts/update')
+        ]
     ],
 
     /*

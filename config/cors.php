@@ -15,19 +15,19 @@ return [
     |
     */
 
-    'paths' => ['api/*'],
+    'paths' => ['api/*', 'api/admin/*', 'api/users/*', '*'],
 
-    'allowed_methods' => ['*'],
+    'allowed_methods' => ['POST', 'GET', 'DELETE', 'PUT', '*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => ['*.myshopify.com','*','.myshopify.com','https://coniq-app.myshopify.com','https://phonecardplus.php-dev.in/coniq_app','https://coniq.test'],
 
-    'allowed_origins_patterns' => [],
+    'allowed_origins_patterns' => ['Google'],
 
-    'allowed_headers' => ['*'],
+    'allowed_headers' => ['X-Custom-Header', 'Upgrade-Insecure-Requests', '*'],
 
-    'exposed_headers' => [],
+    'exposed_headers' => false,
 
-    'max_age' => 0,
+    'max_age' => false,
 
     'supports_credentials' => false,
 

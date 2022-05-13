@@ -2101,225 +2101,233 @@ process.umask = function() { return 0; };
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 var appDomain = "https://coniq.test";
-var customer_id = document.querySelector('#point');
-customer = customer_id.dataset.customer;
-var product_id = document.querySelector('#product_id');
-product_cart_id = parseInt(product_id.dataset.id);
-var total_point = document.getElementsByClassName("payment-due__currency")[0].innerText;
-var currency = document.getElementsByClassName("payment-due__price")[0].innerText;
-var new_price = currency.split(total_point); //console.log(new_price);
+var customer = ShopifyAnalytics.meta.page.customerId;
+console.log(customer);
+var total = document.getElementById('total');
+var output = document.getElementById('output');
 
-var price_change = parseInt(new_price[1]);
-var price = price_change.toFixed(2);
-axios.post(appDomain + '/api/showDiscount', {
-  customer_id: customer,
-  product_id: product_cart_id,
-  price: price
-}).then(function (response) {
-  console.log(response);
-  var curr_balance = response.data[0][0].current_balance;
-  var rule_id = response.data[3][0].rule_id;
-  var barcode = response.data[1][0].barcode_number;
-  var offer_id = response.data[1][0].offer_id;
+function getDiscount(customer) {
+  axios.get(appDomain + '/api/showDiscount', {
+    customer_id: customer
+  }).then(function (response) {
+    if (customer) {
+      var displayChecks = function displayChecks(e) {
+        if (e.target.checked) {
+          var rule_id_value = e.target.value;
+          var cart_price = document.getElementById('end-price').innerText;
 
-  if (curr_balance >= 10000) {
-    var point_value = 10000;
-  } else if (curr_balance <= 9999) {
-    var point_value = 5000;
-  }
+          var _split = cart_price.split("Rs. ");
 
-  var voucher_worth = parseFloat(point_value) / 100;
-  var total_points = document.getElementById("total_points");
-  var total_point = document.getElementsByClassName("payment-due__currency")[0].innerText;
-  var qty = document.getElementsByClassName("product-thumbnail__quantity")[0].innerText;
-  var quantity = parseInt(qty);
-  var currency = document.getElementsByClassName("payment-due__price")[0].innerText;
-  var new_price = currency.split(total_point); //console.log(new_price);
+          var split_amont = parseInt(_split[1]);
+          var cart_total_price = parseInt(cart_price);
+          var cart_qty = document.getElementById('cart_quantity').value; //  let cart_price_int = parseInt(cart_price);
 
-  var price_change = parseInt(new_price[1]);
-  console.log(_typeof(price_change));
-  var price = price_change.toFixed(2);
-  var test = document.getElementById("test");
-  var metadata = document.getElementById('mydata');
-  test.innerHTML = "<form><input type='hidden' id='barcode' name='barcode' value=" + barcode + " /><input type='hidden' id='offer_id' name='offer_id' value=" + offer_id + " /></form>";
-  metadata.innerHTML += "<input id='rule' data-role=" + rule_id + " type='checkbox' value=" + point_value + " /><span> Redeem <b>" + point_value + "</b> for a<span > <br/><span class='voucher'>voucher worth <b>" + voucher_worth.toFixed(2) + "</b></span";
-  total_points.innerHTML = "You have " + curr_balance + " points";
-  var checkbox = document.querySelector("#rule");
-  checkbox.addEventListener("click", displayChecks);
+          var cart_qty_int = parseInt(cart_qty);
+          var rule_id_parse = parseInt(rule_id_value);
+          var offer = document.getElementById("offer_remain");
 
-  function displayChecks(e) {
-    if (e.target.checked) {
-      console.log(response);
-      var rule_id_value = e.target.value;
-      var _rule_id = response.data[3][0].rule_id;
-      var tier = response.data[0][0].tier.label;
-      console.log(tier); // let cart_price = document.getElementById('end-price').innerText;
-      // let split = cart_price.split("Rs. ");
-      // var split_amont = parseFloat(split[1]);
-      // let cart_total_price = parseFloat(cart_price);
+          var _total = document.getElementById("total");
 
-      var _total_points = document.getElementById("total_points");
+          var loyality_voucher = document.getElementById("loyality_voucher");
+          var point = document.getElementById("point").value;
+          var element1 = document.getElementById("rule"); // let element0 = document.getElementById("rule0");
+          //   element1.classList.add("checked");
+          // element0.setAttribute("disabled",'');
+          // element0.classList.remove("checked");
 
-      var _total_point = document.getElementsByClassName("payment-due__currency")[0].innerText;
-      var _qty = document.getElementsByClassName("product-thumbnail__quantity")[0].innerText;
+          var subtotal = document.getElementById("subtotal");
+          var point_typecast = parseInt(point);
+          var point_convert = point_typecast / 100;
+          console.log(point_convert); //console.log(rule_id_parse-redeemdata);
 
-      var _quantity = parseInt(_qty);
+          var redeem_data = rule_id_parse - redeemdata;
+          offer.innerHTML = redeem_data;
+          _total.innerHTML = split_amont;
+          loyality_voucher.innerHTML = "-" + point_typecast;
+          subtotal.innerHTML = split_amont - point_convert;
+          axios.post(appDomain + '/api/subtotal', {
+            ruleid: rule_id_value,
+            qty: cart_qty_int,
+            product_id: product_cart_id
+          }).then(function (response) {
+            console.log(response); // price.innerHTML = split_amont;
+          });
+        } else {//let element1 = document.getElementById("rule1");
+          // let element0 = document.getElementById("rule0");
+          // element0.removeAttribute("disabled",'');
+          //var redeemvalue = document.getElementById("point").setAttribute('value',e.target.value);
+        }
+      };
 
-      var _currency = document.getElementsByClassName("payment-due__price")[0].innerText;
+      //console.log(response);
+      var data_length = response.data[1].spend_voucher_rules.length;
+      var output = document.getElementById("mydata");
+      var points = response.data[2][0]['points_required']; // console.log("hgjhjhj"+points);
 
-      var _new_price = _currency.split(_total_point); //console.log(new_price);
+      var end_price = document.getElementById("end-price").innerText;
+      var qty = document.getElementById("cart_quantity").value;
+      var role = response.data[2][0]['rule_id'];
+      console.log(role);
+      var parseqty = parseInt(qty);
+      var split = end_price.split("Rs. ");
+      var split_amont = parseInt(split[1]);
+      console.log(split_amont);
+      var test = document.getElementById("test");
+      test.innerHTML = "<form><input type='hidden' id='cart'  name='cart' value=" + split_amont + " /><input type='hidden' name='qty' value=" + parseqty + " /></form>"; //    output.innerHTML += "You have "+points+ " points <input id='rule"+i+"' data-role="+role+" type='checkbox' value="+points+" /><br/>";
+
+      output.innerHTML += "You have " + points + " points <input id='rule' data-role=" + role + " type='checkbox' value=" + points + " /><br/>";
+
+      for (var _i = 0; _i < data_length; _i++) {
+        console.log(response); // var points = response.data[1].spend_voucher_rules[i].points_required;
+        // checkout btn
+        // point check
+
+        var product_id = document.querySelector('#product_id');
+        product_cart_id = parseInt(product_id.dataset.id);
+        var productid = response.data[0].draft_orders[_i].line_items[0].product_id;
+
+        if (product_cart_id == productid) {
+          var checkouturl = response.data[0].draft_orders[_i].invoice_url;
+          var checkout_url = document.getElementById("checkout").setAttribute('href', checkouturl);
+          var redeempoint = response.data[0].draft_orders[_i].applied_discount.value;
+          var redeemdata = redeempoint * 100;
+          var redeemvalue = document.getElementById("point").setAttribute('value', redeemdata);
+          console.log(redeempoint);
+        } else {
+          console.log("data different");
+        }
+      } // update cick button
+      // var apply_offer = document.querySelector("#apply_offer");
+      // apply_offer.addEventListener("click", updateAll);
+      // function updateAll() {
+      //     axios.post(appDomain+'/api/verifyrulid', {ruleid:rule_id_value})
+      //         .then(function (response){
+      //             console.log(response);
+      //            // price.innerHTML = split_amont;
+      //         });
+      // }
+      // var checkbox0 = document.querySelector("#rule0");
+      // for (var i = 0; i < data_length; i++) {
+      //     checkbox0.addEventListener("click", displayCheck);
+      //   }
+      //   function displayCheck(e) {
+      //     if (e.target.checked) {
+      //         let rule_id_value = e.target.value;
+      //         let cart_price = document.getElementById('end-price').innerText;
+      //         let split = cart_price.split("Rs. ");
+      //         var split_amont = parseInt(split[1]);
+      //         let cart_total_price = parseInt(cart_price);
+      //         let cart_qty = document.getElementById('cart_quantity').value;
+      //       //  let cart_price_int = parseInt(cart_price);
+      //         let cart_qty_int = parseInt(cart_qty);
+      //         let rule_id_parse = parseInt(rule_id_value);
+      //         let offer = document.getElementById("offer_remain");
+      //         let total = document.getElementById("total");
+      //         let loyality_voucher = document.getElementById("loyality_voucher");
+      //         let points = document.getElementById("point").value;
+      //        // let element1 = document.getElementById("rule1");
+      //        let element0 = document.getElementById("rule");
+      //        element0.classList.add("checked");
+      //     //    element1.setAttribute("disabled",'');
+      //     //    element1.classList.remove("checked");
+      //         let subtotal = document.getElementById("subtotal");
+      //         let point_typecast = parseInt(points);
+      //         let point_convert = point_typecast/100;
+      //        // console.log(typeof(split_amont));
+      //         let redeem_data = rule_id_parse-redeemdata;
+      //         offer.innerHTML = redeem_data;
+      //         total.innerHTML = split_amont;
+      //         loyality_voucher.innerHTML = "-"+point_typecast;
+      //         subtotal.innerHTML = split_amont-point_convert;
+      //         axios.post(appDomain+'/api/subtotal', {ruleid:rule_id_value,qty:cart_qty_int,product_id:product_cart_id})
+      //         .then(function (response){
+      //             console.log(response);
+      //            // price.innerHTML = split_amont;
+      //         });
+      //     }else{
+      //         let element1 = document.getElementById("rule1");
+      //         element1.removeAttribute("disabled",'');
+      //         // e.target.value='';
+      //        //  var redeemvalue = document.getElementById("point").setAttribute('value',e.target.value);
+      //     }
+      // }
 
 
-      var _price_change = parseInt(_new_price[1]);
+      var checkbox1 = document.querySelector("#rule");
 
-      var varient_id = document.querySelector('.product');
-      varient = parseInt(varient_id.dataset.variantId);
-      console.log(varient);
-
-      var _price = _price_change.toFixed(2);
-
-      var product_title = document.getElementsByClassName("product__description__name")[0].innerText;
-      console.log(product_title);
-
-      var _product_id = document.querySelector('#product_id');
-
-      product_cart_id = parseInt(_product_id.dataset.id);
-      var offers = document.getElementById("offer_remain");
-      var tiers = document.getElementById("tier");
-      var point = document.getElementById("point").value;
-      var current_balance = document.getElementById("current_balance");
-      var new_balance = curr_balance - point_value;
-      var barcode = document.querySelector('#barcode').value;
-      var offer_id = document.querySelector('#offer_id').value; //  let checkouturl =  response.data[1].draft_order.invoice_url;
-      //  let checkout_url = document.getElementById("checkout").setAttribute('href',checkouturl);
-
-      current_balance.innerHTML = "Current point balance :<b>" + curr_balance + "</b><br/>";
-      offers.innerHTML = "New point balance :<b>" + new_balance.toFixed(2) + "</b>";
-      tiers.innerHTML = "You are in <b>" + tier + "</b><br/>";
-      var discount = response.data[3][0]['discount_amount'];
-      axios.post(appDomain + '/api/subtotal', {
-        ruleid: _rule_id,
-        quantity: _quantity,
-        product_id: product_cart_id,
-        title: product_title,
-        price: _price_change,
-        varient: varient,
-        discount: discount
-      }).then(function (response) {
-        var checkouturl = response.data.draft_order.invoice_url;
-        axios.post(appDomain + '/api/transactionData', {
-          ruleid: _rule_id,
-          product_id: product_cart_id,
-          quantity: _quantity,
-          price: _price_change,
-          barcode: barcode,
-          offer_id: offer_id
-        }).then(function (response) {
-          console.log(response);
-          window.location.href = checkouturl; // price.innerHTML = split_amont;
-        }); // let checkout_url = document.getElementById("checkout").setAttribute('href',checkouturl);
-        // console.log(checkouturl);
-        //alert(checkouturl);
-
-        console.log(response.data.draft_order.invoice_url); // price.innerHTML = split_amont;
-      });
-    } else {
-      console.log("Please check checkbox"); //let element1 = document.getElementById("rule1");
-      // let element0 = document.getElementById("rule0");
-      // element0.removeAttribute("disabled",'');
-      //var redeemvalue = document.getElementById("point").setAttribute('value',e.target.value);
+      for (var i = 0; i < data_length; i++) {
+        checkbox1.addEventListener("click", displayChecks);
+      }
     }
-  }
+  })["catch"](function (error) {
+    console.log("ERROR: ", error);
+  });
+  var checkout = document.querySelector("#checkout");
+  console.log(checkout);
+  checkout.addEventListener("click", function () {
+    var end_price = document.getElementById("end-price").innerText;
+    var qty = document.getElementById("cart_quantity").value;
+    var parseqty = parseInt(qty);
+    var split = end_price.split("Rs. ");
+    var split_amont = parseInt(split[1]);
+    console.log(split_amont);
+    console.log(parseqty);
+    var checkBox0 = document.getElementById("rule"); //  let checkBox1 = document.getElementById("rule1");
+
+    if (checkBox0.checked == true) {
+      // var ruleid = checkBox0.value;
+      var ruleid = document.querySelector('#rule');
+      var rule_id = ruleid.dataset.role; // console.log(rule_id0.dataset.role);
+    } else if (checkBox1.checked == true) {
+      //var ruleid = checkBox1.value;
+      var ruleid = document.querySelector('#rule');
+      var rule_id = ruleid.dataset.role; // console.log(rule_id1.dataset.role);
+    }
+
+    console.log(product_cart_id);
+    axios.post(appDomain + '/api/transactionData', {
+      ruleid: rule_id,
+      product_id: product_cart_id,
+      quantity: parseqty,
+      price: split_amont
+    }).then(function (response) {
+      console.log(response); // price.innerHTML = split_amont;
+    });
+  });
+}
+
+axios.post(appDomain + '/api/addDiscount', {
+  customer_id: customer
+}).then(function (response) {
+  console.log("Response: ", response);
 })["catch"](function (error) {
   console.log("ERROR: ", error);
 });
-var checkout = document.querySelector("#continue_button");
-checkout.addEventListener("click", function () {
-  var total_point = document.getElementsByClassName("payment-due__currency")[0].innerText;
-  var qty = document.getElementsByClassName("product-thumbnail__quantity")[0].innerText;
-  var quantity = parseInt(qty);
-  var currency = document.getElementsByClassName("payment-due__price")[0].innerText;
-  var new_price = currency.split(total_point);
-  var price_change = new_price[1]; //console.log(price_change);
-  // var floatValue = +(price_change.replace(/,/,'.'));
 
-  var price = parseFloat(price_change.replace(/,/g, '')); //console.log(typeof(a));
-  // let price = price_change.toFixed(2);
-  // let end_price = document.getElementById("end-price").innerText;
-  // var qty =  document.getElementById("cart_quantity").value;
-  //console.log(end_price);
-  // var parseqty = parseInt(qty);
-  // let split = end_price.split("Rs. ");
-  //  var split_amont = parseInt(split[1]);
-  //let checkBox = document.getElementById("rule");
-  //  let checkBox1 = document.getElementById("rule1");
-  // if(checkBox.checked ==true){
-  // var ruleid = checkBox0.value;
-
-  var ruleid = document.querySelector('#rule');
-  var rule_id = ruleid.dataset.role;
-  var product_id = document.querySelector('#product_id');
-  product_cart_id = parseInt(product_id.dataset.id);
-  var barcode = document.querySelector('#barcode').value;
-  var offer_id = document.querySelector('#offer_id').value; //console.log(offer_id);
-  // }
-
-  axios.post(appDomain + '/api/transactionData', {
-    ruleid: rule_id,
-    product_id: product_cart_id,
-    quantity: quantity,
-    price: price,
-    barcode: barcode,
-    offer_id: offer_id
+function removeDiscount(customer) {
+  console.log("hiiiiiiiiiii");
+  axios.post(appDomain + '/api/removeDiscount', {
+    customer_id: customer
   }).then(function (response) {
-    console.log(response); // price.innerHTML = split_amont;
+    console.log("Response: ", response);
+  })["catch"](function (error) {
+    console.log("ERROR: ", error);
   });
-}); // guest login
-// var guest_login = document.querySelector("#guest_login");
-// guest_login.addEventListener("click", guestChecks);
-//                   function guestChecks(response) {
-//                     let email = document.getElementById('email').value;
-//                     axios.post(appDomain+'/api/guestlogin', {email: email})
-//                     .then(response => {
-//                         console.log("Response: ", response);
-//                     })
-//                     .catch( error => {
-//                         console.log("ERROR: ", error);
-//                     });
-//                 }
-// end guest login
-//     axios.post(appDomain+'/api/addDiscount', {customer_id: customer})
-//         .then(response => {
-//             console.log("Response: ", response);
-//         })
-//         .catch( error => {
-//             console.log("ERROR: ", error);
-//         });
-// function removeDiscount(customer) {
-//     console.log("hiiiiiiiiiii");
-//     axios.post(appDomain+'/api/removeDiscount', {customer_id: customer })
-//     .then(response => {
-//         console.log("Response: ", response);
-//     })
-//     .catch( error => {
-//         console.log("ERROR: ", error);
-//     });
-//         }
-//        getDiscount();
-//         let logoutButton = document.querySelector('.logout');
-//         console.log(logoutButton);
-//         logoutButton.addEventListener('click', function(){
-//             console.log("hiiii");
-//             removeDiscount(customer);
-//         });
-//         if(discountButton) {
-//             let customer = discountButton.dataset.customer;
-//         }
-// checkDiscount(customer);
+}
+
+getDiscount(customer);
+var logoutButton = document.querySelector('.logout');
+console.log(logoutButton);
+logoutButton.addEventListener('click', function () {
+  console.log("hiiii");
+  removeDiscount(customer);
+});
+
+if (discountButton) {
+  var _customer = discountButton.dataset.customer;
+} //checkDiscount(customer);
 // cookie
 
 /***/ }),
