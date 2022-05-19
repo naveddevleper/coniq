@@ -2164,21 +2164,20 @@ axios.post(appDomain + '/api/showDiscount', {
 
       var _total_points = document.getElementById("total_points");
 
-      var _total_point = document.getElementsByClassName("payment-due__currency")[0].innerText;
+      var total_point = document.getElementsByClassName("payment-due__currency")[0].innerText;
       var _qty = document.getElementsByClassName("product-thumbnail__quantity")[0].innerText;
 
       var _quantity = parseInt(_qty);
 
-      var _currency = document.getElementsByClassName("payment-due__price")[0].innerText;
+      var currency = document.getElementsByClassName("payment-due__price")[0].innerText;
 
-      var _new_price = _currency.split(_total_point); //console.log(new_price);
+      var _new_price = currency.split(total_point); //console.log(new_price);
 
 
-      var _price_change = parseInt(_new_price[1]);
+      var _price_change = parseInt(_new_price[1]); //  let varient_id = document.querySelector('.product');
+      // varient = parseInt(varient_id.dataset.variantId);
+      // console.log(varient);
 
-      var varient_id = document.querySelector('.product');
-      varient = parseInt(varient_id.dataset.variantId);
-      console.log(varient);
 
       var _price = _price_change.toFixed(2);
 
@@ -2201,31 +2200,131 @@ axios.post(appDomain + '/api/showDiscount', {
       offers.innerHTML = "New point balance :<b>" + new_balance.toFixed(2) + "</b>";
       tiers.innerHTML = "You are in <b>" + tier + "</b><br/>";
       var discount = response.data[3][0]['discount_amount'];
-      axios.post(appDomain + '/api/subtotal', {
-        ruleid: _rule_id,
-        quantity: _quantity,
-        product_id: product_cart_id,
-        title: product_title,
-        price: _price_change,
-        varient: varient,
-        discount: discount
-      }).then(function (response) {
+      var varient_id = document.querySelector("[data-order-summary-section=\"line-items\"]");
+      var tagname = varient_id.getElementsByTagName('tr');
+      var titletag = varient_id.getElementsByTagName('th');
+      var subtagname = varient_id.getElementsByTagName('td');
+      console.log(tagname);
+      var length = tagname.length;
+
+      switch (length) {
+        case 1:
+          var varient_one = tagname[0].dataset.variantId;
+          var product_one = tagname[0].dataset.productId;
+          var title_tag_one = titletag[0].innerText;
+          var quantity_one = subtagname[1].innerText;
+          var price_splited = subtagname[2].innerText;
+          var price_split = price_splited.split(total_point);
+          price_one = parseInt(price_split[1]);
+          var endpoints = {
+            length: length,
+            ruleid: _rule_id,
+            quantity_one: quantity_one,
+            product_one: product_one,
+            title_tag_one: title_tag_one,
+            price_one: price_one,
+            varient_one: varient_one,
+            discount: discount
+          };
+          break;
+
+        case 2:
+          varient_one = tagname[0].dataset.variantId;
+          var varient_two = tagname[1].dataset.variantId;
+          product_one = tagname[0].dataset.productId;
+          var product_two = tagname[1].dataset.productId;
+          title_tag_one = titletag[0].innerText;
+          var title_tag_two = titletag[1].innerText;
+          quantity_one = subtagname[1].innerText;
+          var quantity_two = subtagname[4].innerText;
+          price_splited = subtagname[2].innerText;
+          price_split = price_splited.split(total_point);
+          price_one = parseInt(price_split[1]);
+          price_splited_two = subtagname[5].innerText;
+          price_split = price_splited_two.split(total_point);
+          price_two = parseInt(price_split[1]);
+          var endpoints = {
+            length: length,
+            ruleid: _rule_id,
+            quantity_one: quantity_one,
+            quantity_two: quantity_two,
+            product_one: product_one,
+            product_two: product_two,
+            title_tag_one: title_tag_one,
+            title_tag_two: title_tag_two,
+            price_one: price_one,
+            price_two: price_two,
+            varient_one: varient_one,
+            varient_two: varient_two,
+            discount: discount
+          };
+          break;
+
+        case 3:
+          varient_one = tagname[0].dataset.variantId;
+          varient_two = tagname[1].dataset.variantId;
+          var varient_three = tagname[2].dataset.variantId;
+          product_one = tagname[0].dataset.productId;
+          product_two = tagname[1].dataset.productId;
+          var product_three = tagname[2].dataset.productId;
+          title_tag_one = titletag[0].innerText;
+          title_tag_two = titletag[1].innerText;
+          var title_tag_three = titletag[2].innerText;
+          quantity_one = subtagname[1].innerText;
+          quantity_two = subtagname[4].innerText;
+          var quantity_three = subtagname[8].innerText;
+          price_splited = subtagname[2].innerText;
+          price_split = price_splited.split(total_point);
+          price_one = parseInt(price_split[1]);
+          price_splited_two = subtagname[5].innerText;
+          price_split = price_splited_two.split(total_point);
+          price_two = parseInt(price_split[1]);
+          price_splited_three = subtagname[9].innerText;
+          price_split = price_splited_three.split(total_point);
+          price_three = parseInt(price_split[1]);
+          var endpoints = {
+            length: length,
+            ruleid: _rule_id,
+            quantity_one: quantity_one,
+            quantity_two: quantity_two,
+            quantity_three: quantity_three,
+            product_one: product_one,
+            product_two: product_two,
+            product_three: product_three,
+            title_tag_one: title_tag_one,
+            title_tag_two: title_tag_two,
+            title_tag_three: title_tag_three,
+            price_one: price_one,
+            price_two: price_two,
+            price_three: price_three,
+            varient_one: varient_one,
+            varient_two: varient_two,
+            varient_three: varient_three,
+            discount: discount
+          };
+          break;
+        //  case 4:
+        // varient0 = tagname[0].dataset.variantId;
+        // varient1 = tagname[1].dataset.variantId;
+        // varient2 = tagname[2].dataset.variantId;
+        // let varient3 = tagname[3].dataset.variantId;
+      }
+
+      axios.post(appDomain + '/api/subtotal', endpoints).then(function (response) {
         var checkouturl = response.data.draft_order.invoice_url;
         axios.post(appDomain + '/api/transactionData', {
           ruleid: _rule_id,
-          product_id: product_cart_id,
-          quantity: _quantity,
           price: _price_change,
           barcode: barcode,
           offer_id: offer_id
         }).then(function (response) {
           console.log(response);
           window.location.href = checkouturl; // price.innerHTML = split_amont;
-        }); // let checkout_url = document.getElementById("checkout").setAttribute('href',checkouturl);
-        // console.log(checkouturl);
-        //alert(checkouturl);
-
-        console.log(response.data.draft_order.invoice_url); // price.innerHTML = split_amont;
+        }); //    let checkout_url = document.getElementById("checkout").setAttribute('href',checkouturl);
+        //    console.log(checkouturl);
+        //     alert(checkouturl);
+        //     console.log(response.data.draft_order.invoice_url);
+        //    price.innerHTML = split_amont;
       });
     } else {
       console.log("Please check checkbox"); //let element1 = document.getElementById("rule1");

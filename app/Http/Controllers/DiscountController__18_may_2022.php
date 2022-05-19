@@ -191,8 +191,8 @@ class DiscountController extends Controller
         $request_body = file_get_contents('php://input');
         $data = json_decode($request_body);
         $ruleid = $data->ruleid;
-        // $product_id = $data->product_id;
-        // $quantity = $data->quantity;
+        $product_id = $data->product_id;
+        $quantity = $data->quantity;
         $price = $data->price;
         $barcode = $data->barcode;
         $offer_id = $data->offer_id;
@@ -261,144 +261,21 @@ class DiscountController extends Controller
     public function subtotal(Request $request) {
         $request_body = file_get_contents('php://input');
         $data = json_decode($request_body);
-        $length = $data->length;
-        switch($length){
-            case 1:
-            $ruleid =$data->ruleid;
-            $discount =$data->discount;
-            $product_one =$data->product_one;
-            $varient_one =$data->varient_one;
-            $quantity_one =$data->quantity_one;
-            $title_tag_one =$data->title_tag_one;
-            $price_one = $data->price_one;
-            $body = [
 
-                "draft_order" => array(
-                   "applied_discount" =>array (
-                       "value_type"=>"fixed_amount",
-                       "value" => $discount
-
-                   ),
-                        "line_items" => [array(
-                           //  "id"=> $id,
-                            "variant_id"=> $varient_one,
-                            "product_id"=> $product_one,
-                            "title"=>$title_tag_one,
-                            "price" =>$price_one,
-                            "quantity"=>$quantity_one
-
-                )])
-
-            ];
-            break;
-            case 2:
-            $ruleid =$data->ruleid;
-            $discount =$data->discount;
-            $product_one =$data->product_one;
-            $product_two =$data->product_two;
-            $varient_one =$data->varient_one;
-            $varient_two =$data->varient_two;
-            $quantity_one =$data->quantity_one;
-            $quantity_two =$data->quantity_two;
-            $title_tag_one =$data->title_tag_one;
-            $title_tag_two =$data->title_tag_two;
-            $price_one = $data->price_one;
-            $price_two = $data->price_two;
-            $body = [
-
-                "draft_order" => array(
-                   "applied_discount" =>array (
-                       "value_type"=>"fixed_amount",
-                       "value" => $discount
-
-                   ),
-                        "line_items" => [array(
-                           //  "id"=> $id,
-                            "variant_id"=> $varient_one,
-                            "product_id"=> $product_one,
-                            "title"=>$title_tag_one,
-                            "price" =>$price_one,
-                            "quantity"=>$quantity_one
-
-                        ),array(
-                            "variant_id"=> $varient_two,
-                            "product_id"=> $product_two,
-                            "title"=>$title_tag_two,
-                            "price" =>$price_two,
-                            "quantity"=>$quantity_two
-                        )
-                        ])
-
-                        ];
-                        break;
-            case 3:
-                $ruleid =$data->ruleid;
-                $discount =$data->discount;
-                $product_one =$data->product_one;
-                $product_two =$data->product_two;
-                $product_three =$data->product_three;
-                $varient_one =$data->varient_one;
-                $varient_two =$data->varient_two;
-                $varient_three =$data->varient_three;
-                $quantity_one =$data->quantity_one;
-                $quantity_two =$data->quantity_two;
-                $quantity_three =$data->quantity_three;
-                $title_tag_one =$data->title_tag_one;
-                $title_tag_two =$data->title_tag_two;
-                $title_tag_three =$data->title_tag_three;
-                $price_one = $data->price_one;
-                $price_two = $data->price_two;
-                $price_three = $data->price_three;
-                $body = [
-
-                    "draft_order" => array(
-                        "applied_discount" =>array (
-                            "value_type"=>"fixed_amount",
-                            "value" => $discount
-
-                        ),
-                            "line_items" => [array(
-                                //  "id"=> $id,
-                                "variant_id"=> $varient_one,
-                                "product_id"=> $product_one,
-                                "title"=>$title_tag_one,
-                                "price" =>$price_one,
-                                "quantity"=>$quantity_one
-
-                            ),array(
-                                "variant_id"=> $varient_two,
-                                "product_id"=> $product_two,
-                                "title"=>$title_tag_two,
-                                "price" =>$price_two,
-                                "quantity"=>$quantity_two
-                            ),
-                            array(
-                                "variant_id"=> $varient_three,
-                                "product_id"=> $product_three,
-                                "title"=>$title_tag_three,
-                                "price" =>$price_three,
-                                "quantity"=>$quantity_three
-                            )
-                            ])
-
-                            ];
-                            break;
-
-        }
-    //     $store_price =$data->ruleid;
-    //     $product_id = $data->product_id;
-    //     $quantity = $data->quantity;
-    //     $title = $data->title;
-    //     $discount = $data->discount;
-    //     $varient = $data->varient;
-    //     $price = $data->price;
-    //    // print_r($data);
-         $api_key = '74102073861389c9073c42f88521e4ae';
+        $store_price =$data->ruleid;
+        $product_id = $data->product_id;
+        $quantity = $data->quantity;
+        $title = $data->title;
+        $discount = $data->discount;
+        $varient = $data->varient;
+        $price = $data->price;
+       // print_r($data);
+        $api_key = '74102073861389c9073c42f88521e4ae';
         $access_token = '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';
        // $data = array();
     //     $ids = 888094130359;
     //     $orders = json_decode(file_get_contents('https://6aaebd044fe0ac5aa15a5680df68096d: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@apartment-51-me.myshopify.com/admin/api/2021-10/draft_orders/'.$ids.'.json'),true);
-         $data = array();
+    //     $data = array();
     //     $data[] = $orders;
 
     //     // $length = count($data[0]['draft_orders']);
@@ -418,25 +295,25 @@ class DiscountController extends Controller
 
     //   //  echo "<pre>";print_r($data);exit;
 
-        //  $body = [
+         $body = [
 
-        //          "draft_order" => array(
-        //             "applied_discount" =>array (
-        //                 "value_type"=>"fixed_amount",
-        //                 "value" => $discount
+                 "draft_order" => array(
+                    "applied_discount" =>array (
+                        "value_type"=>"fixed_amount",
+                        "value" => $discount
 
-        //             ),
-        //                  "line_items" => [array(
-        //                     //  "id"=> $id,
-        //                      "variant_id"=> $varient,
-        //                      "product_id"=> $product_id,
-        //                      "title"=>$title,
-        //                      "price" =>$price,
-        //                      "quantity"=>$quantity
+                    ),
+                         "line_items" => [array(
+                            //  "id"=> $id,
+                             "variant_id"=> $varient,
+                             "product_id"=> $product_id,
+                             "title"=>$title,
+                             "price" =>$price,
+                             "quantity"=>$quantity
 
-        //          )])
+                 )])
 
-        //                  ];
+                         ];
                          $key = [
                             $api_key => '6aaebd044fe0ac5aa15a5680df68096d',
                             $access_token=> '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'
@@ -454,14 +331,14 @@ class DiscountController extends Controller
 
             //  $data[] = $discount_order;
           return $orders_data;
-  //  return $data;
+   // return $data;
 }
-// public function verify_webhook($data, $hmac_header)
-//     {
-//         $shopify_app_secret = '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';
-//         $calculated_hmac = base64_encode(hash_hmac('sha256', $data, $shopify_app_secret, true));
-//         return ($hmac_header == $calculated_hmac);
-//     }
+public function verify_webhook($data, $hmac_header)
+    {
+        $shopify_app_secret = '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';
+        $calculated_hmac = base64_encode(hash_hmac('sha256', $data, $shopify_app_secret, true));
+        return ($hmac_header == $calculated_hmac);
+    }
 
 public function customerUpdate(Request $request) {
     $request_body = file_get_contents('php://input');
